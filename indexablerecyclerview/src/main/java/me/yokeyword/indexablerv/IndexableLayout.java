@@ -94,6 +94,8 @@ public class IndexableLayout extends FrameLayout {
     private Comparator mComparator;
     private Handler mHandler;
 
+    private LayoutParams mStickyHeaderLayoutParams;
+
     private HeaderFooterDataObserver<EntityWrapper> mHeaderFooterDataSetObserver = new HeaderFooterDataObserver<EntityWrapper>() {
         @Override
         public void onChanged() {
@@ -132,6 +134,10 @@ public class IndexableLayout extends FrameLayout {
     public IndexableLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs);
+    }
+
+    public void setStickyHeaderLayoutParams(LayoutParams stickyHeaderLayoutParams) {
+        mStickyHeaderLayoutParams = stickyHeaderLayoutParams;
     }
 
     /**
@@ -546,7 +552,11 @@ public class IndexableLayout extends FrameLayout {
         for (int i = 0; i < getChildCount(); i++) {
             if (getChildAt(i) == mRecy) {
                 mStickyViewHolder.itemView.setVisibility(INVISIBLE);
-                addView(mStickyViewHolder.itemView, i + 1);
+                if (mStickyHeaderLayoutParams == null) {
+                    addView(mStickyViewHolder.itemView, i + 1);
+                } else {
+                    addView(mStickyViewHolder.itemView, i + 1, mStickyHeaderLayoutParams);
+                }
                 return;
             }
         }
